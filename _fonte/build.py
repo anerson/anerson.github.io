@@ -157,11 +157,167 @@ home = head('Anderson Costa | Técnico de Enfermagem · COREN-SC 1418566',
 home = home.replace('<meta property="og:type" content="article">', '<meta property="og:type" content="website">')
 open(os.path.join(DIST, 'index.html'), 'w').write(home + body + '</body></html>')
 
+# =================================================================
+# /casa-segura/ - vitrine de afiliados
+# Colar em _fonte/build.py ANTES da linha "# 404, robots, sitemap, CNAME".
+# Usa head(), FOOT, AUTHOR_BOX e PERSON que ja existem no arquivo.
+# Item sem link de afiliado nao entra na pagina.
+# Para o sitemap, trocar a linha das urls por:
+#   urls = ['/'] + [f"/guias/{g['slug']}/" for g in GUIAS] + ['/casa-segura/']
+# =================================================================
+
+# ---------------------------------------------------------------- produtos
+# Cole aqui o link de afiliado do Omron HEM-7156T.
+# Vazio = o aparelho, a pergunta do pulso e a linha do resumo saem da pagina.
+LINK_PRESSAO = ""
+
+# Só itens com link de afiliado. Item sem link não entra na página.
+COMODOS = [
+ ("Banheiro", "O banheiro concentra o maior risco: piso molhado, pouco espaço para se apoiar e o trajeto da madrugada.", [
+   dict(nome="Barra de apoio",
+        modelo="Kit 4 barras de apoio em aço inox, 40 cm",
+        porque="Perto do vaso e dentro do box, para ter onde segurar ao sentar e ao levantar.",
+        conferir="Fixação com parafuso e bucha na parede (ventosa não serve), aço inox e a carga máxima informada na embalagem.",
+        link="https://meli.la/1rdR6W3"),
+   dict(nome="Tapete de borracha com ventosas",
+        modelo="Tapete de PVC com ventosas, 63 x 35 cm",
+        porque="Dentro do box, onde o piso fica molhado e escorregadio.",
+        conferir="Ventosas em toda a base e tamanho que cubra a área onde a pessoa pisa.",
+        link="https://meli.la/1Q41nwv"),
+   dict(nome="Tapete antiderrapante para o piso",
+        modelo="Tapete vazado antiderrapante Espumaço, 1,00 x 1,20 m",
+        porque="Fora do box, na saída do banho, onde a água pinga.",
+        conferir="Base que não escorrega e bordas baixas, para o tapete não virar tropeço.",
+        link="https://meli.la/2ovCFmu"),
+   dict(nome="Cadeira de banho",
+        modelo="Dellamed D30, dobrável, até 100 kg",
+        porque="Para quem fica instável em pé durante o banho.",
+        conferir="Rodas com trava e a carga máxima suportada. Trave as rodas antes de a pessoa sentar ou levantar.",
+        link="https://meli.la/25AJNKx"),
+ ]),
+ ("Saúde no dia a dia", ("Para acompanhar a saúde e para chamar ajuda." if LINK_PRESSAO else "Para a hora em que a pessoa precisa chamar alguém."), [
+   dict(nome="Aparelho de pressão digital de braço",
+        modelo="Omron HEM-7156T, de braço, com estudo de validação clínica publicado",
+        porque="Para medir a pressão em casa e levar os valores anotados para a consulta.",
+        conferir="Modelo de braço, não de pulso, com validação clínica, e manguito do tamanho do braço. Calibre uma vez por ano em local indicado pelo Inmetro.",
+        link=LINK_PRESSAO),
+   dict(nome="Campainha sem fio para pedir ajuda",
+        modelo="Intelbras CIB 101, alcance de até 100 m",
+        porque="Para chamar alguém da casa depois de uma queda ou de um mal-estar.",
+        conferir="Alcance entre os cômodos da casa e botão que a pessoa consiga apertar sozinha.",
+        link="https://meli.la/2EmobnM"),
+ ]),
+]
+
+RESUMO = ([
+ "Antes de comprar, tire o que atrapalha: tapete solto, fio no caminho, móvel baixo na passagem.",
+ "Barra de apoio é o item de maior efeito no banheiro: perto do vaso e dentro do box.",
+ "Nada aqui substitui a avaliação da equipe de saúde que acompanha a pessoa.",
+] + (["Aparelho de pressão: de braço e com validação clínica, nunca de pulso."] if LINK_PRESSAO else []))
+
+FAQ = ([
+ ("Preciso comprar tudo isso?",
+  "Não. A maior parte das mudanças que deixam a casa mais segura não custa nada: tirar tapete solto, prender fio junto à parede e liberar o caminho do quarto ao banheiro. Equipamento vem depois disso."),
+ ("Barra de apoio com ventosa serve?",
+  "Para sustentar o peso de uma pessoa, não. A fixação precisa ser com parafuso e bucha na parede, e a carga máxima vem informada na embalagem."),
+ ("Andador ou bengala, qual escolher?",
+  "Essa escolha depende de avaliação presencial, porque a altura e o tipo mudam conforme a pessoa. Por isso não indico modelo aqui."),
+] + ([("Pode medir a pressão no pulso?",
+  "A orientação das Diretrizes Brasileiras de Medidas da Pressão Arterial é usar aparelho de braço, automático e validado. Modelos de pulso não são indicados para acompanhamento em casa.")] if LINK_PRESSAO else []))
+
+FONTES = [
+ ("Cartilha de prevenção de quedas em idosos – Secretaria Municipal de Saúde de Santos (SP)",
+  "https://www.santos.sp.gov.br/static/files_www/files/portal_files/hotsites/idosoquedas/cartilhaprevencaoqueda_idosos.pdf"),
+ ("Protocolo para Prevenção de Úlcera por Pressão – Ministério da Saúde, Anvisa e Fiocruz (2013)",
+  "https://goias.gov.br/saude/wp-content/uploads/sites/34/2015/02/protocolo-para-prevencao-de-ulcera-por-pressao-17f.pdf"),
+]
+
+GUIAS_LINKS = [
+ ("Como evitar queda de idoso em casa", "/guias/como-evitar-queda-de-idoso-em-casa/"),
+ ("De quanto em quanto tempo virar o paciente acamado", "/guias/mudanca-de-decubito-acamado-de-quanto-em-quanto-tempo/"),
+ ("Idoso no calor: sinais de desidratação", "/guias/idoso-no-calor-sinais-de-desidratacao/"),
+]
+print("dados ok:", sum(len(c[2]) for c in COMODOS), "produtos")
+
+# ---------------------------------------------------------------- página
+PATH = '/casa-segura/'
+TITULO = 'Casa segura para o idoso: o que eu indico e o que conferir antes de comprar'
+DESC = ('Barra de apoio, tapete antiderrapante, cadeira de banho e campainha de chamada: os itens que eu mostro '
+        'nos vídeos, com o que conferir antes de comprar. Links de afiliado, por um técnico de enfermagem.')
+if LINK_PRESSAO:
+    DESC = DESC.replace('campainha de chamada', 'aparelho de pressão')
+
+CSS = """<style>
+.art p.aviso-af{border:2px solid var(--green);border-radius:10px;padding:14px 16px;background:var(--sheet);font:500 15px/1.5 var(--mono)}
+.comodo{display:grid;gap:14px;margin-top:10px}
+.comodo>p.intro{color:var(--ink-2)}
+.prod{border:1px solid var(--rule);border-radius:10px;padding:18px 20px;background:var(--sheet);display:grid;gap:10px}
+.prod h3{font-size:24px;line-height:1.2;margin:0}
+.prod .modelo{font:600 15px/1.4 var(--mono);color:var(--green);margin:0}
+.prod p{margin:0;font-size:18px;line-height:1.6}
+.prod details{border-top:1px solid var(--rule);padding-top:10px}
+.prod summary{cursor:pointer;font-weight:700;font-size:16px}
+.prod details p{margin-top:8px;color:var(--ink-2);font-size:17px}
+.prod .btn{justify-self:start;min-height:48px;display:inline-flex;align-items:center}
+</style>"""
+
+jsonld = {"@context": "https://schema.org", "@graph": [
+  {"@type": "WebPage", "name": TITULO, "description": DESC, "inLanguage": "pt-BR",
+   "datePublished": HOJE, "dateModified": HOJE, "author": PERSON,
+   "mainEntityOfPage": BASE + PATH, "image": BASE + "/foto.jpg",
+   "citation": [u for _, u in FONTES]},
+  {"@type": "ItemList", "name": "Itens para deixar a casa do idoso mais segura",
+   "itemListElement": [{"@type": "ListItem", "position": i + 1, "name": it["nome"]}
+                       for i, it in enumerate(it for _, _, itens in COMODOS for it in itens)]},
+  {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": q,
+    "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in FAQ]}]}
+
+resumo = ''.join(f'<li>{r}</li>' for r in RESUMO)
+faq = ''.join(f'<details><summary>{q}</summary><p>{a}</p></details>' for q, a in FAQ)
+fontes = ''.join(f'<li><a href="{u}" target="_blank" rel="noopener">{t}</a></li>' for t, u in FONTES)
+outros = ''.join(f'<li><a href="{u}">{t}</a></li>' for t, u in GUIAS_LINKS)
+
+comodos = ''
+COMODOS = [(n, i, [it for it in itens if it.get('link')]) for n, i, itens in COMODOS]
+COMODOS = [c for c in COMODOS if c[2]]
+for nome, intro, itens in COMODOS:
+    cards = ''
+    for it in itens:
+        cards += f"""<article class="prod">
+<h3>{it['nome']}</h3>
+<p class="modelo">{it['modelo']}</p>
+<p>{it['porque']}</p>
+<details><summary>O que conferir antes de comprar</summary><p>{it['conferir']}</p></details>
+<a class="btn on" href="{it['link']}" target="_blank" rel="noopener sponsored">Ver no Mercado Livre →</a>
+</article>"""
+    comodos += f"""<h2>{nome}</h2><div class="comodo"><p class="intro">{intro}</p>{cards}</div>"""
+
+html = head(TITULO + ' | Anderson Costa', DESC, PATH, jsonld) + CSS + f"""
+<header class="mini"><div class="wrap"><span>ANDERSON COSTA · {CRED.upper()}</span><a href="/">← Início</a></div></header>
+<main class="wrap"><div class="crumb"><a href="/">Início</a> / Casa segura</div>
+<article class="art">
+<span class="tag" style="color:var(--green)">Casa segura</span>
+<h1>Casa segura para o idoso</h1>
+{AUTHOR_BOX}
+<p class="aviso-af">Links de afiliado: eu recebo uma comissão se você comprar por eles, sem custo extra para você. Indico o que eu usaria, não o que paga mais.</p>
+<div class="resumo"><span class="tag">Resumo rápido</span><ul>{resumo}</ul></div>
+<p>Os itens abaixo são os que aparecem nos meus vídeos sobre prevenção de quedas e cuidado em casa. Em cada um está o que conferir antes de comprar, porque o detalhe errado anula o item: barra fixada com ventosa, tapete que vira tropeço, cadeira de banho com a roda destravada.' + ('' if not LINK_PRESSAO else '')+'</p>
+<p>Antes de gastar, leia o <a href="/guias/como-evitar-queda-de-idoso-em-casa/">guia de prevenção de quedas</a>. A maior parte do que reduz risco em casa não custa nada.</p>
+{comodos}
+<h2>Perguntas frequentes</h2><div class="faq">{faq}</div>
+<h2>Fontes</h2><ul>{fontes}</ul>
+<p class="note">Conteúdo educativo. Não substitui a avaliação da equipe de saúde que acompanha a pessoa, e não indico medicamento nem suplemento. Em emergência, ligue 192.</p>
+<h2>Leia também</h2><ul>{outros}</ul>
+</article></main>""" + FOOT
+
+os.makedirs(DIST + PATH, exist_ok=True)
+open(DIST + PATH + 'index.html', 'w').write(html)
+
 # 404, robots, sitemap, CNAME
 open(os.path.join(DIST, '404.html'), 'w').write(head('Página não encontrada | Anderson Costa', 'Página não encontrada.', '/404.html', {"@context": "https://schema.org", "@type": "WebPage"}) +
     '<main class="wrap art"><h1>Página não encontrada</h1><p><a href="/">Voltar ao início</a></p></main></body></html>')
 open(os.path.join(DIST, 'robots.txt'), 'w').write(f'User-agent: *\nAllow: /\nSitemap: {BASE}/sitemap.xml\n')
-urls = ['/'] + [f"/guias/{g['slug']}/" for g in GUIAS]
+urls = ['/'] + [f"/guias/{g['slug']}/" for g in GUIAS] + ['/casa-segura/']
 open(os.path.join(DIST, 'sitemap.xml'), 'w').write('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
     ''.join(f'  <url><loc>{BASE}{u}</loc><lastmod>{HOJE}</lastmod></url>\n' for u in urls) + '</urlset>\n')
 if not DOMAIN.endswith('github.io'): open(os.path.join(DIST, 'CNAME'), 'w').write(DOMAIN + '\n')

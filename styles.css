@@ -178,3 +178,81 @@ section.s{padding-block:64px;border-top:1px solid var(--rule)}
 .mini .wrap{display:flex;justify-content:space-between;align-items:center;gap:12px;padding-block:14px;font:500 13px/1.3 var(--mono)}
 .mini a{color:var(--trace);text-decoration:none;font-weight:600}
 .more{font:700 18px/1 var(--sign);letter-spacing:.06em;text-transform:uppercase;text-decoration:none}
+
+/* ============================================================
+   UPGRADE VISUAL — acrescentar ao fim de styles.css
+   (e ao fim de _fonte/base.css, para o proximo build manter)
+   Sem JS. Sem imagem nova. Nao muda cor nem fonte do texto.
+   ============================================================ */
+
+/* 1. Tipografia de display fluida: cresce na tela grande,
+      continua legivel no celular. */
+.monitor .mon-main h1{
+  font-size:clamp(44px, 7.4vw, 84px);
+  line-height:.94;
+  letter-spacing:-.01em;
+  text-wrap:balance;
+}
+.s > .wrap > h2, .s h2{
+  font-size:clamp(30px, 4.2vw, 52px);
+  line-height:1;
+  text-wrap:balance;
+}
+.sheet h3{text-wrap:balance}
+
+/* 2. Mais ar entre as secoes nas telas grandes.
+      No celular fica como esta hoje. */
+@media (min-width:860px){
+  .s{padding-block:clamp(64px, 7vw, 112px)}
+}
+
+/* 3. Revelacao ao rolar, so com CSS.
+      - so roda se a pessoa nao pediu menos animacao
+      - so roda em navegador que suporta animacao ligada ao scroll
+      - sem suporte, tudo aparece normalmente (nada some)
+      - o cabecalho nao anima, para nao atrasar a primeira pintura */
+@media (prefers-reduced-motion: no-preference){
+  @supports (animation-timeline: view()){
+    .badge-row, .s, .sheet{
+      animation:sobe linear both;
+      animation-timeline:view();
+      /* so durante a entrada: bloco que ja esta na tela fica visivel */
+      animation-range:entry 0% entry 100%;
+    }
+  }
+}
+@keyframes sobe{
+  from{opacity:0;transform:translateY(20px)}
+  to{opacity:1;transform:none}
+}
+
+/* 4. As fichas respondem ao toque e ao mouse. */
+.sheet{
+  transition:border-color .18s ease, transform .18s ease;
+}
+@media (hover:hover){
+  .sheet:hover{border-color:var(--green);transform:translateY(-2px)}
+}
+.sheet:focus-within{border-color:var(--green)}
+
+/* 5. Links do corpo com sublinhado que acende. */
+.art a:not(.btn):not(.more), .s p a:not(.btn){
+  text-decoration:underline;
+  text-decoration-color:var(--rule);
+  text-underline-offset:3px;
+  transition:text-decoration-color .18s ease;
+}
+.art a:not(.btn):not(.more):hover, .s p a:not(.btn):hover{
+  text-decoration-color:var(--green);
+}
+
+/* 6. Foco visivel em tudo que e tocavel (acessibilidade). */
+:focus-visible{outline:3px solid var(--trace);outline-offset:3px;border-radius:6px}
+
+/* 7. REMOVIDO: content-visibility nas fichas.
+      Testado no site real e reprovado: a ficha aparecia em branco
+      por um instante ao rolar rapido ou ao chegar por link com ancora.
+      Ganho de renderizacao nao compensa num site de 20 KB. */
+
+/* 8. Botao com area de toque confortavel. */
+.btn{min-height:48px;display:inline-flex;align-items:center;justify-content:center}
