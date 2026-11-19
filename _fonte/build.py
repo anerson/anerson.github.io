@@ -8,7 +8,7 @@ DOMAIN = os.environ.get('SITE_DOMAIN', 'anerson.github.io')
 BASE = f'https://{DOMAIN}'
 HOJE = datetime.date.today().isoformat()
 AUTOR = 'Anderson Costa'
-CRED = 'Técnico de Enfermagem · COREN-SC 1418566'
+CRED = 'Enfermeiro · COREN-SC 1021036'
 IG = 'https://www.instagram.com/andersoncosta.enf/'
 
 shutil.rmtree(DIST, ignore_errors=True)
@@ -58,8 +58,8 @@ def head(title, desc, path, jsonld):
 <link rel="icon" href="/foto.jpg">{FONTS}<link rel="stylesheet" href="/styles.css">
 <script type="application/ld+json">{json.dumps(jsonld, ensure_ascii=False)}</script></head><body>"""
 
-PERSON = {"@type": "Person", "name": "Anderson Adilson da Costa", "jobTitle": "Técnico de Enfermagem",
-          "identifier": "COREN-SC 1418566", "url": BASE + "/", "sameAs": [IG],
+PERSON = {"@type": "Person", "name": "Anderson Adilson da Costa", "jobTitle": "Enfermeiro",
+          "identifier": "COREN-SC 1021036", "url": BASE + "/", "sameAs": [IG],
           "alumniOf": {"@type": "CollegeOrUniversity", "name": "Unisociesc Blumenau"}}
 
 FOOT = f"""<footer class="end"><div class="wrap"><div style="display:grid;gap:16px;align-content:start">
@@ -72,7 +72,7 @@ FOOT = f"""<footer class="end"><div class="wrap"><div style="display:grid;gap:16
 GUIAS = [
  dict(slug='como-evitar-queda-de-idoso-em-casa', titulo='Como evitar queda de idoso em casa: 4 coisas para tirar hoje',
   h1='Como evitar queda de idoso em casa', curto='Quedas em casa',
-  desc='Tapete solto, fio no caminho, móvel baixo e escuro: o que tirar hoje da casa de um idoso para evitar quedas, explicado por um técnico de enfermagem, com fonte oficial.',
+  desc='Tapete solto, fio no caminho, móvel baixo e escuro: o que tirar hoje da casa de um idoso para evitar quedas, explicado por um enfermeiro, com fonte oficial.',
   resumo=['Tire tapetes soltos (no banheiro, só antiderrapante).', 'Prenda fios junto à parede.', 'Libere o caminho do quarto ao banheiro.', 'Deixe luz ao alcance da cama e luz de presença no corredor.', 'Instale barra de apoio perto do vaso e dentro do box.'],
   corpo="""<p>A maior parte das mudanças que deixam a casa de um idoso mais segura não custa nada. É tirar coisa do caminho. Antes de comprar qualquer equipamento, olhe o chão e o trajeto que a pessoa faz todo dia, principalmente do quarto ao banheiro, de madrugada.</p>
 <h2>1. Tapete solto</h2><p>Tapete que escorrega ou dobra na ponta vira armadilha para quem arrasta um pouco os pés. Retire os tapetes soltos. No banheiro, use apenas o antiderrapante.</p>
@@ -152,7 +152,7 @@ for sid, g in zip(['acamado', 'quedas', 'calor'], [GUIAS[1], GUIAS[0], GUIAS[2]]
     body = body[:j] + f'<div class="sheet-b" style="padding-top:0"><a class="more" href="/guias/{g["slug"]}/">Ler o guia completo →</a></div>' + body[j:]
 home_ld = {"@context": "https://schema.org", "@graph": [dict(PERSON, **{"@id": BASE + "/#anderson"}),
            {"@type": "WebSite", "name": "Anderson Costa Enfermagem", "url": BASE + "/", "inLanguage": "pt-BR"}]}
-home = head('Anderson Costa | Técnico de Enfermagem · COREN-SC 1418566',
+home = head('Anderson Costa | Enfermeiro · COREN-SC 1021036',
             'O que acontece no hospital, explicado por quem cuida. Guias práticos com fonte oficial para quem cuida de idoso e acamado em casa.', '/', home_ld)
 home = home.replace('<meta property="og:type" content="article">', '<meta property="og:type" content="website">')
 open(os.path.join(DIST, 'index.html'), 'w').write(home + body + '</body></html>')
